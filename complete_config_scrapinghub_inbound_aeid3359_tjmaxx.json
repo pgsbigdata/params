@@ -1,0 +1,87 @@
+{
+    "scrapinghub_inbound_aeid3359_tjmaxx": {
+      "tjmaxx/*": {
+        "AEIDProjectId": "AEID3359",
+        "Sherlock": {
+          "config": {
+            "skip_time_series_checker": true,
+            "at_least": true
+          },
+          "time": [
+            "0 7 * * 1"
+          ],
+          "data": "Pipelines"
+        },
+        "bucketId": "scrapinghub_inbound_aeid3359_tjmaxx",
+        "bucketIdPrefix": "aeid3359_tjmaxx",
+        "ProjectId": "scrapinghub-218317",
+        "Pipelines": [
+          {
+            "name": "DataQuality",
+            "columns_required": "address_1,context_identifier,execution_id,feed_code,file_create_dt,hours,latitude,longitude,phone_number,postal_code,record_create_by,record_create_dt,region_1,region_2,site,source_country,status,store_name,store_number,url",
+            "schema_check": {
+              "enable": false,
+              "block_if_mismatch": false
+            },
+            "quality_check_sentence": [
+              "store_number.null_percentage < 0.1",
+              "store_name.null_percentage < 0.1",
+              "phone_number.null_percentage < 0.1",
+              "status.null_percentage < 75"
+            ]
+          },
+          {
+            "name": "ToRaw"
+          },
+          {
+            "name": "ColumnRestructure",
+            "order": "address_1,context_identifier,execution_id,feed_code,file_create_dt,hours,latitude,longitude,phone_number,postal_code,record_create_by,record_create_dt,region_1,region_2,site,source_country,status,store_name,store_number,url"
+          },
+          {
+            "name": "MetaData"
+          },
+          {
+            "name": "ToStaging"
+          },
+          {
+            "name": "EntityId",
+            "Entity_columns": [
+              "phone_number"
+            ]
+          },
+          {
+            "AutoSchema": false,
+            "BigQuery_projectId": "aggdata-212919",
+            "SchemaAllString": true,
+            "FileType": "CSV",
+            "BigQuery_tableId": "open_close_locations",
+            "name": "ToBigQuery",
+            "TimePartitioning": {
+              "Field": "file_create_dt",
+              "Clustering_fields": [],
+              "Clustering_enable": false,
+              "Enable": true
+            },
+            "AllowFieldAddition": true,
+            "AppendData": true,
+            "CSV": {
+              "max_bad_records": 10,
+              "field_delimiter": ",",
+              "null_marker": "",
+              "encoding": "UTF-8",
+              "ignore_unknown_values": true,
+              "allow_quoted_newlines": true,
+              "allow_jagged_rows": true,
+              "skip_leading_rows": 1
+            },
+            "Schema": {},
+            "BigQuery_datasetId": "TJMaxx_Marshalls",
+            "JSON": {
+              "max_bad_records": false,
+              "ignore_unknown_values": false
+            }
+          }
+        ]
+      }
+    }
+  }

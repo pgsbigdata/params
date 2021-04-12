@@ -1,0 +1,122 @@
+{
+  "scrapinghub_inbound_aeid1673_barratt": {
+    "AEID1673_Barratt_listings/*": {
+      "bucketId": "scrapinghub_inbound_aeid1673_barratt",
+      "bucketIdPrefix": "aeid1673_barratt",
+      "ProjectId": "scrapinghub-218317",
+      "AEIDProjectId": "AEID1673",
+      "Sherlock": {
+        "data": "Pipelines",
+        "time": [
+          "0 0 25 * *"
+        ]
+      },
+      "Pipelines": [
+        {
+          "name": "DataQuality",
+          "columns_required": "location_id,location_name,plot,location_type,development,development_url,development_id,category_name_1,category_name_2,address,region_1,region_2,postal_code,country,phone,list_price_min,currency,bedroom,square_feet,floor_number,number_of_floors,meta1,meta2,url,latitude,longitude,record_create_dt,feed_code,site,source_country,context_identifier,record_create_by,execution_id,file_create_dt",
+          "quality_check_sentence": [
+            "url.null_percentage < 0.1",
+            "record_create_dt.null_percentage < 0.1",
+            "file_create_dt.null_percentage < 0.1",
+            "execution_id.null_percentage < 0.1",
+            "location_id.null_percentage < 0.1",
+            "location_name.null_percentage < 0.1",
+            "development.null_percentage < 0.1",
+            "address.null_percentage < 2.0",
+            "list_price_min.null_percentage < 2.0"
+          ]
+        },
+        {
+          "name": "ToRaw"
+        },
+        {
+          "name": "MetaData"
+        },
+        {
+          "name": "ToStaging"
+        },
+        {
+          "name": "EntityId",
+          "Entity_columns": [
+            "location_id"
+          ]
+        },
+        {
+          "name": "ColumnRestructure",
+          "order": "row,AEIDprojectId,datasetId,location_id,location_name,plot,location_type,development,development_url,development_id,category_name_1,category_name_2,address,region_1,region_2,postal_code,country,phone,list_price_min,currency,bedroom,square_feet,floor_number,number_of_floors,meta1,meta2,url,record_create_dt,feed_code,site,source_country,context_identifier,record_create_by,execution_id,file_create_dt,blk_source_id,latitude,longitude"
+        },
+        {
+          "BigQuery_projectId": "real-estate-231015",
+          "BigQuery_datasetId": "Barratt",
+          "Schema": {
+            "row": "INTEGER",
+            "AEIDprojectId": "STRING",
+            "datasetId": "STRING",
+            "location_id": "STRING",
+            "location_name": "STRING",
+            "plot": "STRING",
+            "location_type": "STRING",
+            "development": "STRING",
+            "development_url": "STRING",
+            "development_id": "STRING",
+            "category_name_1": "STRING",
+            "category_name_2": "STRING",
+            "address": "STRING",
+            "region_1": "STRING",
+            "region_2": "STRING",
+            "postal_code": "STRING",
+            "country": "STRING",
+            "phone": "INTEGER",
+            "list_price_min": "INTEGER",
+            "currency": "STRING",
+            "bedroom": "INTEGER",
+            "square_feet": "INTEGER",
+            "floor_number": "STRING",
+            "number_of_floors": "INTEGER",
+            "meta1": "STRING",
+            "meta2": "STRING",
+            "url": "STRING",
+            "record_create_dt": "TIMESTAMP",
+            "feed_code": "STRING",
+            "site": "STRING",
+            "source_country": "STRING",
+            "context_identifier": "STRING",
+            "record_create_by": "STRING",
+            "execution_id": "STRING",
+            "file_create_dt": "DATE",
+            "blk_source_id": "STRING",
+            "latitude": "STRING",
+            "longitude": "STRING"
+          },
+          "AllowFieldAddition": false,
+          "FileType": "CSV",
+          "AutoSchema": false,
+          "CSV": {
+            "field_delimiter": ",",
+            "allow_jagged_rows": true,
+            "encoding": "UTF-8",
+            "null_marker": "",
+            "ignore_unknown_values": true,
+            "skip_leading_rows": 1,
+            "max_bad_records": 10,
+            "allow_quoted_newlines": true
+          },
+          "name": "ToBigQuery",
+          "AppendData": true,
+          "JSON": {
+            "ignore_unknown_values": false,
+            "max_bad_records": false
+          },
+          "BigQuery_tableId": "Listings",
+          "TimePartitioning": {
+            "Enable": true,
+            "Clustering_fields": [],
+            "Field": "file_create_dt",
+            "Clustering_enable": false
+          }
+        }
+      ]
+    }
+  }
+}
